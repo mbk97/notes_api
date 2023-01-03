@@ -17,6 +17,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/notes/auth", authRouter);
 app.use("/api/notes", notesRouter);
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
+
+export { app };
