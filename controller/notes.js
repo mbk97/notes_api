@@ -30,7 +30,7 @@ const createNote = async (req, res) => {
     });
 
     if (userNote) {
-      res.status(200).json({
+      res.status(201).json({
         message: "Note created successfully",
         notes: userNote,
       });
