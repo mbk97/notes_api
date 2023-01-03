@@ -42,4 +42,54 @@ const createNote = async (req, res) => {
   }
 };
 
-export { getAllNotes, createNote };
+const updateNote = async (req, res) => {
+  try {
+    const noteId = await Notes.findById(req.params.id);
+    if (!noteId) {
+      res.status(400).json({
+        message: "Note does not exist",
+      });
+    }
+
+    const updateNoteData = await Notes.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      }
+    );
+
+    res.status(200).json({
+      message: "Note updated",
+      updateNoteData,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error,
+    });
+  }
+};
+
+const deleteNote = async (req, res) => {
+  try {
+    const noteId = await Notes.findById(req.params.id);
+
+    if (!noteId) {
+      res.status(400).json({
+        message: "Not does not exist",
+      });
+      return;
+    }
+
+    await Notes.findByIdAndDelete(noteId);
+    res.status(200).json({
+      message: "Note deleted successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error,
+    });
+  }
+};
+
+export { getAllNotes, createNote, updateNote, deleteNote };
