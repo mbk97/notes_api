@@ -62,7 +62,7 @@ const updateNote = async (req, res) => {
     const user = await User.findById(req.user.id);
 
     // make sure the loggedin user matches the note user
-    if (!noteId.user !== user.id) {
+    if (noteId.user.toString() !== user.id) {
       res.status(400).json({
         message: "User not found",
       });
@@ -81,9 +81,9 @@ const updateNote = async (req, res) => {
       updateNoteData,
     });
   } catch (error) {
-    res.status(400).json({
-      message: error,
-    });
+    // res.status(400).json({
+    //   message: error,
+    // });
   }
 };
 
@@ -95,6 +95,18 @@ const deleteNote = async (req, res) => {
       res.status(400).json({
         message: "Not does not exist",
       });
+      return;
+    }
+
+    // find the user
+    const user = await User.findById(req.user.id);
+
+    // make sure the loggedin user matches the note user
+    if (noteId.user.toString() !== user.id) {
+      res.status(400).json({
+        message: "User not found",
+      });
+
       return;
     }
 
