@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { protect } from "../auth/verifyToken.js";
 import {
   createNote,
   deleteNote,
@@ -8,9 +9,9 @@ import {
 
 const notesRouter = Router();
 
-notesRouter.get("/", getAllNotes);
-notesRouter.post("/", createNote);
-notesRouter.put("/:id", updateNote);
-notesRouter.delete("/:id", deleteNote);
+notesRouter.get("/", protect, getAllNotes);
+notesRouter.post("/", protect, createNote);
+notesRouter.put("/:id", protect, updateNote);
+notesRouter.delete("/:id", protect, deleteNote);
 
 export { notesRouter };
