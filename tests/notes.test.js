@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import request from "supertest";
 import dotenv from "dotenv";
-// import index from "../index.js";
 import { app } from "../index.js";
 
 // This allows us load the enviroment variables
@@ -40,7 +39,7 @@ describe("POST /api/notes", () => {
 describe("PUT /api/notes/:id", () => {
   it("It should update the note with the parameter id", async () => {
     const res = await request(app)
-      .put("/api/notes/63b3230e594d859e65712527")
+      .put("/api/notes/63b323256bd72d4052ea42a7")
       .send({
         title: "I am an updated hello title",
       });
