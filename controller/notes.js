@@ -1,8 +1,9 @@
 import Notes from "../model/notes.js";
 import { createNoteSchema } from "../utils/validation.js";
+import User from "../model/user.js";
 
 const getAllNotes = async (req, res) => {
-  const notes = await Notes.find();
+  const notes = await Notes.find({ user: req.user.id });
 
   if (notes) {
     res.status(200).json({
@@ -27,12 +28,18 @@ const createNote = async (req, res) => {
     const userNote = await Notes.create({
       title: title,
       description: description,
+      user: req.user.id,
     });
 
     if (userNote) {
       res.status(201).json({
         message: "Note created successfully",
-        notes: userNote,
+        note: {
+          id: userNote._id,
+          title: userNote.title,
+          description: userNote.description,
+          user: userNote.user,
+        },
       });
     }
   } catch (error) {
@@ -51,6 +58,16 @@ const updateNote = async (req, res) => {
       });
     }
 
+    // find the user
+    const user = await User.findById(req.user.id);
+
+    // make sure the loggedin user matches the note user
+    if (noteId.user.toString() !== user.id) {
+      res.status(400).json({
+        message: "User not found",
+      });
+    }
+
     const updateNoteData = await Notes.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -64,9 +81,9 @@ const updateNote = async (req, res) => {
       updateNoteData,
     });
   } catch (error) {
-    res.status(400).json({
-      message: error,
-    });
+    // res.status(400).json({
+    //   message: error,
+    // });
   }
 };
 
@@ -78,6 +95,18 @@ const deleteNote = async (req, res) => {
       res.status(400).json({
         message: "Not does not exist",
       });
+      return;
+    }
+
+    // find the user
+    const user = await User.findById(req.user.id);
+
+    // make sure the loggedin user matches the note user
+    if (noteId.user.toString() !== user.id) {
+      res.status(400).json({
+        message: "User not found",
+      });
+
       return;
     }
 

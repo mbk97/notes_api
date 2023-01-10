@@ -31,12 +31,14 @@ const register = async (req, res) => {
     });
     res.status(200).json({
       message: "Registration successful",
-      user: savedUser,
+      user: {
+        id: savedUser._id,
+        name: savedUser.name,
+        email: savedUser.email,
+        token: generateToken(savedUser._id),
+      },
     });
   } catch (error) {
-    res.status(400).json({
-      message: error,
-    });
     console.log(error);
   }
 };
@@ -61,19 +63,27 @@ const login = async (req, res) => {
   // Check if password is correct
   const validPass = await bcrypt.compare(password, user.password);
 
-  if (!validPass) {
-    res.status(400).json({
-      message: "Invalid password",
+  if (validPass) {
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      },
     });
   } else {
-    // res.status(200).json({
-    //   message: "Login successful",
-    // });
+    res.status(400).json({
+      message: "Invalid credentials",
+    });
   }
+};
 
-  // create and assign a token
-  const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-  // res.header("auth-token", token).send(token);
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.TOKEN_SECRET, {
+    expiresIn: "1d",
+  });
 };
 
 export { register, login };
