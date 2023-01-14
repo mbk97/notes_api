@@ -80,10 +80,29 @@ const login = async (req, res) => {
   }
 };
 
+const updateProfile = async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    res.status(400).json({
+      message: "user does not exist",
+    });
+  }
+
+  const updateUserData = await User.findByIdAndUpdate(user, req.body, {
+    new: true,
+  });
+
+  res.status(200).json({
+    message: "user profile updated",
+    updateUserData,
+  });
+};
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.TOKEN_SECRET, {
     expiresIn: "1d",
   });
 };
 
-export { register, login };
+export { register, login, updateProfile };

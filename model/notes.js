@@ -14,6 +14,9 @@ const notesSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  archived: {
+    type: Boolean,
+  },
 });
 
 export default model("Notes", notesSchema);

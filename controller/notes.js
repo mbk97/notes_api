@@ -16,8 +16,24 @@ const getAllNotes = async (req, res) => {
   }
 };
 
+const getUnarchivedNotes = async (req, res) => {
+  const notes = await Notes.find({ user: req.user.id });
+  const newNotes = notes.filter((item) => {
+    return item.archived === true;
+  });
+  if (newNotes) {
+    res.status(200).json({
+      notes: newNotes,
+    });
+  } else {
+    res.status(400).json({
+      message: "you do not have archived notes",
+    });
+  }
+};
+
 const createNote = async (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, archived } = req.body;
   const { error } = createNoteSchema.validate(req.body);
 
   if (error) {
@@ -29,6 +45,7 @@ const createNote = async (req, res) => {
       title: title,
       description: description,
       user: req.user.id,
+      archived: archived,
     });
 
     if (userNote) {
@@ -38,6 +55,7 @@ const createNote = async (req, res) => {
           id: userNote._id,
           title: userNote.title,
           description: userNote.description,
+          archived: userNote.archived,
           user: userNote.user,
         },
       });
@@ -121,4 +139,4 @@ const deleteNote = async (req, res) => {
   }
 };
 
-export { getAllNotes, createNote, updateNote, deleteNote };
+export { getAllNotes, createNote, updateNote, deleteNote, getUnarchivedNotes };
