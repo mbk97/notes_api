@@ -7,8 +7,6 @@ const getUserImage = async (req, res) => {
     .find({ email: user.email })
     .sort({ _id: -1 })
     .limit(1);
-  console.log(userImg[0], "I dey here");
-  console.log(user.email.toString() === userImg[0].email, "user is dey here");
   if (user.email.toString() === userImg[0].email) {
     res.status(200).json({
       message: userImg[0].image,

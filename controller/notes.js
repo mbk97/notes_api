@@ -18,8 +18,8 @@ const getAllNotes = async (req, res) => {
 
 const getUnarchivedNotes = async (req, res) => {
   const notes = await Notes.find({ user: req.user.id });
-  const newNotes = notes.filter((item) => {
-    return item.archived === true;
+  const newNotes = notes.filter((note) => {
+    return note.archived === true;
   });
   if (newNotes) {
     res.status(200).json({
