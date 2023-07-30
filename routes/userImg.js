@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { protect } from "../auth/verifyToken.js";
-import { getUserImage } from "../controller/userImage.js";
+import { getUserImage, uploadUserImage } from "../controller/userImage.js";
+import { parser } from "../config/cloudinary.js";
 
-const getUserImgRouter = Router();
+const userImgRouter = Router();
+userImgRouter.post("/upload", protect, parser.single("image"), uploadUserImage);
+userImgRouter.get("/profile-img", protect, getUserImage);
 
-getUserImgRouter.get("/get-profile-img", protect, getUserImage);
-
-export { getUserImgRouter };
+export { userImgRouter };

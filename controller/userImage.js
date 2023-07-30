@@ -18,4 +18,26 @@ const getUserImage = async (req, res) => {
   }
 };
 
-export { getUserImage };
+const uploadUserImage = async (req, res) => {
+  try {
+    if (res.statusCode === 200) {
+      const createImg = await profileImage.create({
+        email: req.user.email,
+        image: req.file.path,
+      });
+
+      res.status(200).json({
+        message: "Image added successfully",
+        pofileImg: {
+          image: createImg.image,
+          id: createImg.id,
+          user: createImg.email,
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getUserImage, uploadUserImage };

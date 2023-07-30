@@ -1,7 +1,7 @@
 import User from "../model/user.js";
+import { generateToken } from "../utils/token.js";
 import { loginSchema, registerSchema } from "../utils/validation.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -96,12 +96,6 @@ const updateProfile = async (req, res) => {
   res.status(200).json({
     message: "user profile updated",
     updateUserData,
-  });
-};
-
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.TOKEN_SECRET, {
-    expiresIn: "1d",
   });
 };
 
